@@ -2,14 +2,14 @@ package kr.co.greenpai;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
-@EnableDiscoveryClient
+@EnableEurekaServer
 @SpringBootApplication
-public class SpringCloudService3Application {
+public class SpringCloudEurekaServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringCloudService3Application.class, args);
+        SpringApplication.run(SpringCloudEurekaServerApplication.class, args);
     }
 
 }
