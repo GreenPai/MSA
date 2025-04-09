@@ -1,0 +1,7 @@
+spring:
+    application:
+        name: service3
+    profiles:
+        active: dev
+    config:
+        import: optional:configserver:http://localhost:9000
