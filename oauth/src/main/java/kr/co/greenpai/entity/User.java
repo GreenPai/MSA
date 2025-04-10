@@ -23,6 +23,9 @@ public class User {
     private String birth;
     private String role;
 
+    // OAuth 인증 업체 정보
+    private String provider;
+
     public UserDTO toDTO() {
         return UserDTO.builder()
                 .uid(uid)
