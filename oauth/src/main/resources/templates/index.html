@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <title>index</title>
@@ -7,8 +9,15 @@
 <body>
     <h3>OAuth2 인증실습</h3>
 
-    <h4>로그인</h4>
-    <a th:href="@{/user/login}">로그인하기</a>
+    <th:block sec:authorize="isAnonymous()">
+        <h4>로그인</h4>
+        <a th:href="@{/user/login}">로그인하기</a>
+    </th:block>
+    <th:block sec:authorize="isAuthenticated">
+        아이디: [[${#authentication.principal.user.uid}]]<br>
+        이름: [[${#authentication.principal.user.name}]]<br>
+        <a th:href="@{/user/logout}">로그아웃</a>
+    </th:block>
 
 </body>
 </html>

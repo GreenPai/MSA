@@ -38,16 +38,44 @@ public class Oauth2UserService  extends DefaultOAuth2UserService  {
 
         Map<String, Object> attrs = oAuth2User.getAttributes();
 
-        String email = (String) attrs.get("email");
+        String email;
+        String name;
+
+        if(provider.equals("kakao")){
+            Map<String, Object> kakaoAccount = (Map<String, Object>) attrs.get("kakao_account");
+            Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+            email = (String) kakaoAccount.get("email");
+            name = (String) profile.get("nickname");
+        }else if(provider.equals("naver")){
+            Map<String, Object> response = (Map<String, Object>) attrs.get("response");
+            email = (String) response.get("email");
+            name = (String) response.get("name");
+        }else{
+            // 구글
+            email = (String) attrs.get("email");
+            name = (String) attrs.get("name");
+            log.info("email={}", email);
+        }
+
         String uid = email.substring(0, email.lastIndexOf("@"));
-        String name = (String) attrs.get("name");
+
+        if(provider.equals("kakao")){
+            uid = "K_" + uid;
+        }else if(provider.equals("naver")){
+            uid = "N_" + uid;
+        }else{
+            uid = "G_" + uid;
+        }
 
         // 회원 테이블에서 사용자 확인
         Optional<User> optUser = userRepository.findById(uid);
 
+        User user = null;
         if(optUser.isPresent()){
             // 회원이 존재하지 않으면 정보를 저장
-            User user = User.builder()
+            user = optUser.get();
+        }else{
+            user = User.builder()
                     .uid(uid)
                     .name(name)
                     .role("USER")
@@ -55,10 +83,8 @@ public class Oauth2UserService  extends DefaultOAuth2UserService  {
                     .build();
 
             userRepository.save(user);
-
         }
 
-        User user = optUser.get();
 
         return MyUserDetails.builder()
                 .user(user)
